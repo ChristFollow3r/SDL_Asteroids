@@ -43,7 +43,7 @@ void GameEngine::Update() {
 	gameScene["Gameplay"] = new GamePlayScene();
 	gameScene["HighScore"] = new HighscoreScene();
 
-	Scene* currentScene = gameScene["Gameplay"];
+	Scene* currentScene = gameScene["MainMenu"];
 	currentScene->Start(renderer);
 
 	while (!IM.GetQuit())

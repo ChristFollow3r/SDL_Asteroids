@@ -12,6 +12,7 @@ class Spaceship : public GameObject {
 private:
 
     float impulseForce = 134.0f;
+    int maxHP = 3;
 
     SDL_Renderer* cachedRenderer;
     SDL_Texture* CreateTexture(SDL_Renderer* renderer);
@@ -23,10 +24,16 @@ private:
 
 public:
 
+    int currentHP;
+    int totalPoints;
+
     Spaceship(SDL_Renderer* renderer, std::vector<std::unique_ptr<GameObject>>* objects) : GameObject(renderer) {
 
         worldShit = objects;
         tag = ObjectTag::SPACESHIP;
+
+        currentHP = maxHP;
+        totalPoints = 0;
 
         position = Vector2(250.0f, 250.0f);
         rotation = 0.0f;
@@ -39,6 +46,9 @@ public:
     }
 
     ~Spaceship() {}
+
+    void TakeDamage();
+    void AddPoints();
 
     void Render(SDL_Renderer* renderer) override;
     void Update(float dt) override;

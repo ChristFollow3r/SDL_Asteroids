@@ -43,7 +43,7 @@
 
                 float angleRadians = std::atan2(deltaY, deltaX); // Ni idea de com funciona aixo, mho ha dit la IA.
                 this->rotation = angleRadians * (180.0f / 3.141592f);
-                this->rotation += 90.f; // Aixo es pq la nau miri al ratoli
+                this->rotation += 90.f; // Aixo es pq la nau miri al ratoli, weno la punta de la nau
 
                 // MOVEMENT
 
@@ -69,7 +69,7 @@
                 if (position.x > screenWidth + 50.0f) position.x = -50.0f; // Teleport shit
                 else if (position.x < -50.0f) position.x = screenWidth + 50.0f; // Igualment aio crec que es una mica inutil perque
                 // quan treus el ratoli fora de la pantalla sdl deixa de pillar la posicio del ratoli, i no tinc ni idea de com
-                // arreglar-ho
+                // arreglar-ho. Pero m'agrada mes la rotació amb el ratolí que amb les tecles
 
                 if (position.y > screenHeight + 50.0f) position.y = -50.0f;
                 else if (position.y < -50.0f) position.y = screenHeight + 50.0f;
@@ -91,4 +91,23 @@
                 // for (auto& bullet : bullets) bullet->Update(dt);
 
                 // for (int i = bullets.size() - 1; i >= 0; i--) if (bullets[i]->IsDead()) bullets.erase(bullets.begin() + i);
+            }
+
+            void Spaceship::TakeDamage() {
+
+                this->currentHP--;
+
+                
+                if (currentHP > 0) std::cout << "\nYou've been hit!\nRemaining HP: " << this->currentHP << "\n";
+                else {
+                    std::cout << "\nYou died!\n";
+                    std::cout << "Your score was: " << this->totalPoints << " points.";
+                    this->Kill();
+                }
+            }
+
+            void Spaceship::AddPoints() {
+
+                this->totalPoints += 50;
+
             }

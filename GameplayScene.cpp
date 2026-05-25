@@ -2,6 +2,9 @@
 #include "Spaceship.h"
 #include "Asteroid.h"
 
+// Lo bo de utilitzar smart pointers es que jo ho puc possar tot a dintre del vector de gameobjects, i en el moment en el que
+// trec algo del vector, com aquest pointer ha sortit del scope, es borra automaticament
+
 void GamePlayScene::Start(SDL_Renderer* renderer) { 
 
 	Scene::Start(renderer);
@@ -28,9 +31,10 @@ void GamePlayScene::Update(float dt) {
 
 
 	// Detectar colisiones
-	for (int i = 0; i < objects.size(); i++) { // Segur que hi han maneras mes eficients de fer aixo pero bueno funciona
+	for (int i = 0; i < objects.size(); i++) { 
 
-		for (int j = 0; j < objects.size(); j++) {
+		for (int j = i + 1; j < objects.size(); j++) { // M'ha dit la IA que possar j = i + 1 marregla un problema de que 
+			// S'imprimeixin dos cops els textos
 
 			SDL_FRect hitboxA = objects[i]->GetHitbox();
 			SDL_FRect hitboxB = objects[j]->GetHitbox();
@@ -60,19 +64,28 @@ void GamePlayScene::Update(float dt) {
 					objects[i]->Kill();
 					objects[j]->Kill();
 
-					std::cout << "Asteroid destroyed! 50 points\n";
+					for (int k = 0; k < objects.size(); k++) {
+						if (objects[k]->GetTag() == ObjectTag::SPACESHIP && !objects[k]->IsDead()) { // Pq no li sumi punts si ja la ha palmat
+							Spaceship* playerShip = static_cast<Spaceship*>(objects[k].get());
+							playerShip->AddPoints();
+						}
+					}
+					std::cout << "\nAsteroid destroyed! 50 points\n";
 
 				}
 
 				else if ((tagA == ObjectTag::SPACESHIP && tagB == ObjectTag::ASTEROID) ||
-					(tagA == ObjectTag::ASTEROID && tagB == ObjectTag::SPACESHIP)) {
+						(tagA == ObjectTag::ASTEROID && tagB == ObjectTag::SPACESHIP)) {
 
-					std::cout << "Player has been hit!\n";
+					int shipIndex = tagA == ObjectTag::SPACESHIP ? i : j;
+					int asteroidIndex = tagA == ObjectTag::ASTEROID ? i : j;
 
-					if (tagA == ObjectTag::ASTEROID) objects[i]->Kill();
-					if (tagB == ObjectTag::ASTEROID) objects[j]->Kill();
+					Spaceship* playerShip = static_cast<Spaceship*>(objects[shipIndex].get());
+					playerShip->TakeDamage();
 
+					objects[asteroidIndex]->Kill();
 				}
+
 			}
 
 		}
@@ -80,6 +93,20 @@ void GamePlayScene::Update(float dt) {
 
 	// Matar coses
 	for (int i = objects.size() - 1; i >= 0; i--) if (objects[i]->IsDead()) objects.erase(objects.begin() + i);
+
+	bool playerIsAlive = false; //
+
+	for (int i = 0; i < objects.size(); i++) {
+		if (objects[i]->GetTag() == ObjectTag::SPACESHIP) {
+			playerIsAlive = true;
+			break;
+		}
+	}
+
+	if (!playerIsAlive) {
+		targetScene = "HighScore";
+		finished = true;
+	}
 
 }
 

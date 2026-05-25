@@ -27,7 +27,8 @@ public:
         texture = CreateTexture(renderer);
 
         speed = 500.0f;
-        lifetime = 0.0f;
+        lifetime = 0.0f; // Jo faig que les bales morin al cap de dos segons o si xocan amb un asteroide. Tambe podria mirar
+        // si han sortit de la pantalla, pero crec que aixi es mes fàcil i tampoc es que canvii tant el resultat
         maxLifetime = 2.0f;
 
         float mathAngle = (rotation - 90.0f) * (3.141592f / 180.0f);
