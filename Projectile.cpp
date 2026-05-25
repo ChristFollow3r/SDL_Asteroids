@@ -22,6 +22,7 @@ void Projectile::Update(float dt) {
     this->hitbox.y = this->position.y;
 
     lifetime += dt;
+    if (lifetime >= maxLifetime) this->Kill();
 }
 
 void Projectile::Render(SDL_Renderer* renderer) {

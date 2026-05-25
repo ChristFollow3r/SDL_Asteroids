@@ -15,7 +15,7 @@ public:
     void Render(SDL_Renderer* renderer) override;
     void Update(float dt) override;
 
-    bool IsDead() { return lifetime >= maxLifetime; }
+    // bool IsDead() { return lifetime >= maxLifetime; }
 
     Projectile(SDL_Renderer* renderer, Vector2 startPos, float startRotation) : GameObject(renderer) {
 
